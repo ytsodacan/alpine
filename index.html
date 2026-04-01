@@ -538,7 +538,7 @@
 
 </div>
 
-<script src="libv86.js"></script>
+<script src="https://copy.sh/v86/libv86.js"></script>
 
 <script>
   /* ─── Boot log simulation ─── */
@@ -573,10 +573,10 @@
   /* ─── Emulator ─── */
   window.onload = function () {
     var emulator = new V86Starter({
-      wasm_path:   'v86.wasm',
+      wasm_path:   'https://copy.sh/v86/v86.wasm',
       memory_size: 128 * 1024 * 1024,
-      vga_bios:    { url: 'vgabios.bin' },
-      bios:        { url: 'seabios.bin' },
+      vga_bios:    { url: 'https://copy.sh/v86/bios/vgabios.bin' },
+      bios:        { url: 'https://copy.sh/v86/bios/seabios.bin' },
       cdrom:       { url: 'alpine-virt-3.23.3-x86.iso' },
       screen_container: document.getElementById('screen_container'),
       autostart: true,
