@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+    <title>Alpine in Browser</title>
+</head>
+<body>
+    <div id="screen_container">
+        <div style="white-space: pre; font-family: monospace"></div>
+        <canvas style="display: none"></canvas>
+    </div>
+
+    <script src="libv86.js"></script>
+    <script>
+        window.onload = function() {
+            var emulator = new V86Starter({
+                wasm_path: "v86.wasm",
+                memory_size: 128 * 1024 * 1024, // 128MB RAM
+                vga_bios: { url: "vgabios.bin" },
+                bios: { url: "seabios.bin" },
+                cdrom: { url: "alpine-virt-3.23.3-x86.iso" },
+                autostart: true,
+            });
+        };
+    </script>
+</body>
+</html>
