@@ -28,380 +28,175 @@
       --sidebar-w: 220px;
     }
 
-    html, body {
-      height: 100%;
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font);
-      font-size: 13px;
-      overflow: hidden;
-    }
+    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--font); font-size: 13px; overflow: hidden; }
 
-    .app {
-      display: flex;
-      height: 100vh;
-    }
+    .app { display: flex; height: 100vh; }
 
     /* ══ SIDEBAR ══ */
     .sidebar {
-      width: var(--sidebar-w);
-      flex-shrink: 0;
-      background: var(--sidebar);
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
+      width: var(--sidebar-w); flex-shrink: 0;
+      background: var(--sidebar); border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; overflow: hidden;
     }
 
     .sidebar-logo {
-      padding: 16px 16px 14px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      padding: 16px 16px 14px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
     }
+    .sidebar-logo svg { width: 20px; height: 20px; flex-shrink: 0; color: var(--accent); }
+    .sidebar-logo-text strong { display: block; font-size: 13px; font-weight: 600; color: var(--text); }
+    .sidebar-logo-text span { font-size: 11px; color: var(--text-dim); font-family: var(--mono); }
 
-    .sidebar-logo svg {
-      width: 20px; height: 20px;
-      flex-shrink: 0;
-      color: var(--accent);
-    }
+    .sidebar-section { padding: 14px 16px 6px; }
+    .sidebar-section-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 8px; }
 
-    .sidebar-logo-text strong {
-      display: block;
-      font-size: 13px; font-weight: 600; color: var(--text);
-    }
-
-    .sidebar-logo-text span {
-      font-size: 11px; color: var(--text-dim); font-family: var(--mono);
-    }
-
-    .sidebar-section {
-      padding: 14px 16px 6px;
-    }
-
-    .sidebar-section-label {
-      font-size: 10px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-dim);
-      margin-bottom: 8px;
-    }
-
-    .info-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 4px 0;
-      font-size: 12px;
-    }
-
+    .info-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; font-size: 12px; }
     .info-row .key { color: var(--text-dim); }
     .info-row .val { color: var(--text); font-family: var(--mono); font-size: 11px; }
 
-    .sidebar-divider {
-      height: 1px;
-      background: var(--border);
-      margin: 6px 0;
-    }
+    .sidebar-divider { height: 1px; background: var(--border); margin: 6px 0; }
 
     .status-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 10px;
-      margin: 0 8px;
-      border-radius: 4px;
-      background: var(--accent-bg);
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 10px; margin: 0 8px; border-radius: 4px; background: var(--accent-bg);
     }
-
-    .status-dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--accent);
-      flex-shrink: 0;
-    }
-
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
     .status-dot.idle { background: var(--amber); }
-
-    .status-label {
-      font-size: 12px;
-      color: var(--accent);
-      font-family: var(--mono);
-    }
-
+    .status-label { font-size: 12px; color: var(--accent); font-family: var(--mono); }
     .status-label.idle { color: var(--amber); }
 
     .cpu-section { padding: 0 16px; }
-
-    .cpu-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 5px;
-      font-size: 11px;
-    }
-
+    .cpu-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 11px; }
     .cpu-row .key { color: var(--text-dim); }
     .cpu-row .val { color: var(--text); font-family: var(--mono); }
+    .bar-track { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .bar-fill { height: 100%; background: var(--accent); border-radius: 2px; width: 0%; transition: width 0.6s ease; }
 
-    .bar-track {
-      height: 3px;
-      background: var(--border);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-
-    .bar-fill {
-      height: 100%;
-      background: var(--accent);
-      border-radius: 2px;
-      width: 0%;
-      transition: width 0.6s ease;
-    }
-
-    .sidebar-actions {
-      padding: 0 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
+    .sidebar-actions { padding: 0 8px; display: flex; flex-direction: column; gap: 2px; }
     .action-btn {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      padding: 7px 10px;
-      border-radius: 4px;
-      border: none;
-      background: transparent;
-      color: var(--text-soft);
-      font-family: var(--font);
-      font-size: 12px;
-      cursor: pointer;
-      width: 100%;
-      text-align: left;
+      display: flex; align-items: center; gap: 9px; padding: 7px 10px;
+      border-radius: 4px; border: none; background: transparent; color: var(--text-soft);
+      font-family: var(--font); font-size: 12px; cursor: pointer; width: 100%; text-align: left;
       transition: background 0.1s, color 0.1s;
     }
-
-    .action-btn:hover {
-      background: var(--surface);
-      color: var(--text);
-    }
-
-    .action-btn svg {
-      width: 14px; height: 14px;
-      flex-shrink: 0;
-      opacity: 0.7;
-    }
-
+    .action-btn:hover { background: var(--surface); color: var(--text); }
+    .action-btn svg { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.7; }
     .action-btn:hover svg { opacity: 1; }
 
     .sidebar-footer {
-      margin-top: auto;
-      padding: 12px 16px;
-      border-top: 1px solid var(--border);
-      font-size: 11px;
-      color: var(--text-dim);
-      line-height: 1.8;
+      margin-top: auto; padding: 12px 16px; border-top: 1px solid var(--border);
+      font-size: 11px; color: var(--text-dim); line-height: 1.8;
     }
-
     .sidebar-footer kbd {
-      display: inline-block;
-      padding: 1px 5px;
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--text-soft);
-      background: var(--surface);
+      display: inline-block; padding: 1px 5px; border: 1px solid var(--border);
+      border-radius: 3px; font-family: var(--mono); font-size: 10px;
+      color: var(--text-soft); background: var(--surface);
     }
 
     /* ══ MAIN ══ */
-    .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
+    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
 
     .topbar {
-      display: flex;
-      align-items: center;
-      height: 35px;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
+      display: flex; align-items: center; height: 35px;
+      background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0;
     }
-
     .tab {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      padding: 0 16px;
-      height: 100%;
-      font-size: 12px;
-      color: var(--text);
-      background: var(--bg);
-      border-right: 1px solid var(--border);
+      display: flex; align-items: center; gap: 7px; padding: 0 16px;
+      height: 100%; font-size: 12px; color: var(--text);
+      background: var(--bg); border-right: 1px solid var(--border);
     }
-
     .tab svg { width: 12px; height: 12px; color: var(--accent); }
+    .topbar-right { margin-left: auto; padding-right: 16px; font-size: 11px; color: var(--text-dim); font-family: var(--mono); }
 
-    .topbar-right {
-      margin-left: auto;
-      padding-right: 16px;
-      font-size: 11px;
-      color: var(--text-dim);
-      font-family: var(--mono);
-    }
+    .terminal-wrap { flex: 1; position: relative; overflow: hidden; background: #1a1a1a; }
 
-    .terminal-wrap {
-      flex: 1;
-      position: relative;
-      overflow: hidden;
-      background: #1a1a1a;
-    }
-
-    /* Boot overlay */
+    /* ══ BOOT OVERLAY ══ */
     #boot-overlay {
       position: absolute; inset: 0; z-index: 20;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: #1a1a1a;
-      gap: 20px;
-      transition: opacity 0.5s ease;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: #1a1a1a; gap: 22px; transition: opacity 0.5s ease;
     }
-
     #boot-overlay.hidden { opacity: 0; pointer-events: none; }
 
-    .boot-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
+    .boot-header { display: flex; align-items: center; gap: 12px; }
     .boot-header svg { width: 26px; height: 26px; color: var(--accent); }
+    .boot-header-text { font-size: 15px; font-weight: 600; color: var(--text); }
+    .boot-header-sub { font-size: 12px; color: var(--text-dim); font-family: var(--mono); margin-top: 2px; }
 
-    .boot-header-text {
-      font-size: 15px; font-weight: 600; color: var(--text);
+    /* Phase bars */
+    .boot-phases { width: 440px; display: flex; flex-direction: column; gap: 14px; }
+    .boot-phase { display: flex; flex-direction: column; gap: 6px; }
+    .boot-phase-top {
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-size: 11px; font-family: var(--mono);
     }
-
-    .boot-header-sub {
-      font-size: 12px; color: var(--text-dim);
-      font-family: var(--mono); margin-top: 2px;
-    }
-
-    .boot-log {
-      font-family: var(--mono);
-      font-size: 12px;
-      width: 380px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .boot-log-line {
-      display: flex;
-      gap: 10px;
-      color: var(--text-dim);
-      animation: slidein 0.2s ease;
-    }
-
-    @keyframes slidein {
-      from { opacity: 0; transform: translateX(-6px); }
-      to   { opacity: 1; transform: none; }
-    }
-
-    .tag-ok   { color: var(--green); }
-    .tag-info { color: var(--amber); }
-
-    .boot-progress-wrap { width: 380px; }
-
-    .boot-progress-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 11px;
-      color: var(--text-dim);
-      margin-bottom: 6px;
-      font-family: var(--mono);
-    }
-
-    .boot-track {
-      height: 2px;
-      background: var(--border);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-
+    .boot-phase-name { color: var(--text-soft); }
+    .boot-phase-right { display: flex; gap: 12px; }
+    .boot-phase-pct { color: var(--accent); }
+    .boot-phase-detail { color: var(--text-dim); }
+    .boot-track { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
     .boot-fill {
-      height: 100%;
-      background: var(--accent);
-      border-radius: 2px;
-      width: 0%;
-      transition: width 0.4s ease;
+      height: 100%; background: var(--accent); border-radius: 2px;
+      width: 0%; transition: width 0.3s ease;
     }
+    .boot-fill.done { background: var(--green); }
+    .boot-fill.inactive { background: var(--border); }
+
+    /* Serial log */
+    .serial-log {
+      width: 440px; height: 90px; overflow: hidden;
+      font-family: var(--mono); font-size: 11px; color: var(--text-dim);
+      display: flex; flex-direction: column; justify-content: flex-end; gap: 2px;
+      position: relative;
+    }
+    .serial-log::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 30px;
+      background: linear-gradient(to bottom, #1a1a1a, transparent);
+      pointer-events: none; z-index: 1;
+    }
+    .serial-line { color: var(--text-dim); line-height: 1.4; animation: fadeline 0.15s ease; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .serial-line.kernel { color: #569cd6; }
+    .serial-line.ok     { color: var(--green); }
+    .serial-line.warn   { color: var(--amber); }
+    @keyframes fadeline { from { opacity: 0; } to { opacity: 1; } }
+
+    /* Elapsed timer */
+    .boot-timer {
+      font-family: var(--mono); font-size: 11px; color: var(--text-dim);
+      display: flex; gap: 20px;
+    }
+    .boot-timer span { color: var(--text-soft); }
+    .boot-timer .elapsed { color: var(--amber); }
 
     /* v86 output */
-    #screen_container {
-      position: absolute; inset: 0;
-    }
-
+    #screen_container { position: absolute; inset: 0; }
     #screen_container > div {
-      width: 100%; height: 100%;
-      color: #d4d4d4;
-      background: #1a1a1a;
-      font-family: var(--mono);
-      font-size: 13px;
-      line-height: 1.5;
-      padding: 10px;
-      overflow: auto;
-      white-space: pre;
+      width: 100%; height: 100%; color: #d4d4d4; background: #1a1a1a;
+      font-family: var(--mono); font-size: 13px; line-height: 1.5;
+      padding: 10px; overflow: auto; white-space: pre;
     }
-
     #screen_container canvas {
-      display: block !important;
-      width: 100% !important;
-      height: 100% !important;
+      display: block !important; width: 100% !important; height: 100% !important;
       image-rendering: pixelated;
     }
 
     /* Status bar */
     .statusbar {
-      height: 22px;
-      background: var(--accent);
-      display: flex;
-      align-items: center;
-      padding: 0 12px;
-      gap: 16px;
-      flex-shrink: 0;
+      height: 22px; background: var(--accent);
+      display: flex; align-items: center; padding: 0 12px; gap: 16px; flex-shrink: 0;
     }
-
-    .sb-item {
-      font-size: 11px;
-      color: #1a1a1a;
-      font-family: var(--mono);
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
+    .sb-item { font-size: 11px; color: #1a1a1a; font-family: var(--mono); display: flex; align-items: center; gap: 5px; }
     .sb-right { margin-left: auto; }
 
-    :fullscreen .sidebar,
-    :fullscreen .topbar,
-    :fullscreen .statusbar { display: none; }
+    :fullscreen .sidebar, :fullscreen .topbar, :fullscreen .statusbar { display: none; }
   </style>
 </head>
 <body>
-
 <div class="app">
 
   <!-- ══ SIDEBAR ══ -->
   <aside class="sidebar">
-
     <div class="sidebar-logo">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <polygon points="12,2 22,20 2,20"/>
@@ -436,13 +231,8 @@
     <div class="sidebar-section">
       <div class="sidebar-section-label">Performance</div>
       <div class="cpu-section">
-        <div class="cpu-row">
-          <span class="key">CPU</span>
-          <span class="val" id="cpu-val">—</span>
-        </div>
-        <div class="bar-track">
-          <div class="bar-fill" id="cpu-bar"></div>
-        </div>
+        <div class="cpu-row"><span class="key">CPU</span><span class="val" id="cpu-val">—</span></div>
+        <div class="bar-track"><div class="bar-fill" id="cpu-bar"></div></div>
       </div>
     </div>
 
@@ -453,43 +243,29 @@
     </div>
     <div class="sidebar-actions">
       <button class="action-btn" id="btn-reset">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6">
-          <path d="M2 8a6 6 0 1 0 1.5-4"/><polyline points="2,4 2,8 6,8"/>
-        </svg>
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8a6 6 0 1 0 1.5-4"/><polyline points="2,4 2,8 6,8"/></svg>
         Reset VM
       </button>
       <button class="action-btn" id="btn-fs">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6">
-          <polyline points="5,2 2,2 2,5"/><polyline points="11,2 14,2 14,5"/>
-          <polyline points="5,14 2,14 2,11"/><polyline points="11,14 14,14 14,11"/>
-        </svg>
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="5,2 2,2 2,5"/><polyline points="11,2 14,2 14,5"/><polyline points="5,14 2,14 2,11"/><polyline points="11,14 14,14 14,11"/></svg>
         Fullscreen
       </button>
       <button class="action-btn" id="btn-screenshot">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6">
-          <rect x="2" y="4" width="12" height="9" rx="1"/>
-          <circle cx="8" cy="8.5" r="2.2"/>
-          <path d="M5.5 4 L6.5 2 H9.5 L10.5 4"/>
-        </svg>
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="4" width="12" height="9" rx="1"/><circle cx="8" cy="8.5" r="2.2"/><path d="M5.5 4 L6.5 2 H9.5 L10.5 4"/></svg>
         Screenshot
       </button>
     </div>
 
     <div class="sidebar-footer">
-      <kbd>Ctrl</kbd> + <kbd>Alt</kbd> — release mouse pointer
+      <kbd>Ctrl</kbd> + <kbd>Alt</kbd> — release mouse
     </div>
-
   </aside>
 
   <!-- ══ MAIN ══ -->
   <div class="main">
-
     <div class="topbar">
       <div class="tab">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6">
-          <rect x="1" y="3" width="14" height="11" rx="1"/>
-          <line x1="4" y1="7" x2="12" y2="7"/><line x1="4" y1="10" x2="9" y2="10"/>
-        </svg>
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1" y="3" width="14" height="11" rx="1"/><line x1="4" y1="7" x2="12" y2="7"/><line x1="4" y1="10" x2="9" y2="10"/></svg>
         alpine-virt-3.23.3-x86 — /bin/sh
       </div>
       <div class="topbar-right" id="topbar-status">Booting</div>
@@ -497,32 +273,58 @@
 
     <div class="terminal-wrap">
 
+      <!-- Boot overlay with real progress -->
       <div id="boot-overlay">
+
         <div class="boot-header">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-            <polygon points="12,2 22,20 2,20"/>
-            <line x1="12" y1="9" x2="12" y2="14"/>
-            <circle cx="12" cy="17" r="0.6" fill="currentColor"/>
+            <polygon points="12,2 22,20 2,20"/><line x1="12" y1="9" x2="12" y2="14"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/>
           </svg>
           <div>
             <div class="boot-header-text">Alpine Linux 3.23.3</div>
-            <div class="boot-header-sub">Starting virtual machine…</div>
+            <div class="boot-header-sub" id="boot-phase-label">Waiting to start…</div>
           </div>
         </div>
 
-        <div class="boot-log" id="boot-log"></div>
+        <!-- Two real progress bars -->
+        <div class="boot-phases">
 
-        <div class="boot-progress-wrap">
-          <div class="boot-progress-label">
-            <span id="boot-stage">Initialising</span>
-            <span id="boot-pct">0%</span>
+          <div class="boot-phase">
+            <div class="boot-phase-top">
+              <span class="boot-phase-name">1 — Download ISO</span>
+              <div class="boot-phase-right">
+                <span class="boot-phase-detail" id="dl-size"></span>
+                <span class="boot-phase-pct" id="dl-pct">0%</span>
+              </div>
+            </div>
+            <div class="boot-track"><div class="boot-fill" id="dl-bar"></div></div>
           </div>
-          <div class="boot-track">
-            <div class="boot-fill" id="progress-bar"></div>
+
+          <div class="boot-phase">
+            <div class="boot-phase-top">
+              <span class="boot-phase-name">2 — Kernel boot</span>
+              <div class="boot-phase-right">
+                <span class="boot-phase-detail" id="boot-detail"></span>
+                <span class="boot-phase-pct" id="boot-pct">—</span>
+              </div>
+            </div>
+            <div class="boot-track"><div class="boot-fill inactive" id="boot-bar"></div></div>
           </div>
+
         </div>
+
+        <!-- Live serial output -->
+        <div class="serial-log" id="serial-log"></div>
+
+        <!-- Elapsed timer -->
+        <div class="boot-timer">
+          <div>Elapsed <span class="elapsed" id="elapsed">0:00</span></div>
+          <div id="speed-info"></div>
+        </div>
+
       </div>
 
+      <!-- v86 output -->
       <div id="screen_container">
         <div style="white-space: pre; font-family: monospace"></div>
         <canvas style="display: none"></canvas>
@@ -535,45 +337,125 @@
       <div class="sb-item">x86 · 128 MB RAM</div>
       <div class="sb-item sb-right">Alpine Linux 3.23.3</div>
     </div>
-
   </div>
 </div>
 
 <script src="libv86.js"></script>
 <script>
-  const bootMessages = [
-    { tag: 'ok',   msg: 'Memory map initialised' },
-    { tag: 'ok',   msg: 'Virtual devices ready' },
-    { tag: 'info', msg: 'Mounting alpine-virt-3.23.3-x86.iso' },
-    { tag: 'ok',   msg: 'VGA BIOS loaded' },
-    { tag: 'ok',   msg: 'SeaBIOS initialised' },
-    { tag: 'info', msg: 'Starting boot sequence' },
-    { tag: 'ok',   msg: 'x86 CPU context ready' },
-    { tag: 'info', msg: 'Waiting for kernel…' },
+(function () {
+
+  /* ── Elapsed timer ── */
+  var startTime = Date.now();
+  var timerEl   = document.getElementById('elapsed');
+  var timerInterval = setInterval(function () {
+    var s = Math.floor((Date.now() - startTime) / 1000);
+    timerEl.textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+  }, 1000);
+
+  /* ── Serial log ── */
+  var serialLog = document.getElementById('serial-log');
+  var serialBuf = '';
+  var MAX_LINES = 6;
+
+  // Patterns that indicate meaningful kernel milestones
+  var kernelPatterns = [
+    { re: /linux version/i,        cls: 'kernel', pct: 10, label: 'Kernel decompressing' },
+    { re: /initrd/i,               cls: 'kernel', pct: 20, label: 'Loading initrd' },
+    { re: /calibrating delay/i,    cls: 'kernel', pct: 30, label: 'Calibrating CPU' },
+    { re: /memory:/i,              cls: 'kernel', pct: 35, label: 'Mapping memory' },
+    { re: /pci/i,                  cls: 'kernel', pct: 40, label: 'Probing PCI bus' },
+    { re: /vga/i,                  cls: 'kernel', pct: 45, label: 'VGA init' },
+    { re: /ext[234]|iso9660/i,     cls: 'ok',     pct: 55, label: 'Mounting filesystem' },
+    { re: /run\/openrc/i,          cls: 'ok',     pct: 65, label: 'Starting OpenRC' },
+    { re: /starting.*service/i,    cls: 'ok',     pct: 75, label: 'Starting services' },
+    { re: /welcome to alpine/i,    cls: 'ok',     pct: 92, label: 'Almost ready…' },
+    { re: /login:/i,               cls: 'ok',     pct: 100, label: 'Login prompt ready!' },
   ];
 
-  const logEl   = document.getElementById('boot-log');
-  const progBar = document.getElementById('progress-bar');
-  const bootPct = document.getElementById('boot-pct');
-  const bootStg = document.getElementById('boot-stage');
-  let logIdx = 0;
+  var bootPct     = 0;
+  var bootBar     = document.getElementById('boot-bar');
+  var bootPctEl   = document.getElementById('boot-pct');
+  var bootDetail  = document.getElementById('boot-detail');
+  var phaseLabel  = document.getElementById('boot-phase-label');
 
-  function appendLog() {
-    if (logIdx >= bootMessages.length) return;
-    const { tag, msg } = bootMessages[logIdx++];
-    const line = document.createElement('div');
-    line.className = 'boot-log-line';
-    line.innerHTML = `<span class="tag-${tag}">[${tag.toUpperCase().padEnd(4)}]</span><span>${msg}</span>`;
-    logEl.appendChild(line);
-    const pct = Math.round((logIdx / bootMessages.length) * 80);
-    progBar.style.width = pct + '%';
-    bootPct.textContent = pct + '%';
-    bootStg.textContent = msg;
-    if (logIdx < bootMessages.length) setTimeout(appendLog, 500 + Math.random() * 400);
+  function addSerialLine(text, cls) {
+    var line = document.createElement('div');
+    line.className = 'serial-line' + (cls ? ' ' + cls : '');
+    line.textContent = text;
+    serialLog.appendChild(line);
+    // Keep only last MAX_LINES
+    while (serialLog.children.length > MAX_LINES) {
+      serialLog.removeChild(serialLog.firstChild);
+    }
   }
 
-  setTimeout(appendLog, 300);
+  function handleSerialChar(c) {
+    if (c === '\n' || c === '\r') {
+      var line = serialBuf.trim();
+      serialBuf = '';
+      if (!line) return;
 
+      // Check for milestones
+      var cls = '';
+      for (var i = 0; i < kernelPatterns.length; i++) {
+        var p = kernelPatterns[i];
+        if (p.re.test(line) && p.pct > bootPct) {
+          bootPct = p.pct;
+          cls = p.cls;
+          bootBar.style.width = bootPct + '%';
+          bootPctEl.textContent = bootPct + '%';
+          bootDetail.textContent = '';
+          phaseLabel.textContent = p.label;
+          if (bootPct >= 100) {
+            bootBar.classList.add('done');
+          }
+          break;
+        }
+      }
+
+      addSerialLine(line, cls);
+    } else {
+      serialBuf += c;
+    }
+  }
+
+  /* ── Download progress ── */
+  var dlBar   = document.getElementById('dl-bar');
+  var dlPct   = document.getElementById('dl-pct');
+  var dlSize  = document.getElementById('dl-size');
+  var dlDone  = false;
+
+  function formatBytes(b) {
+    if (b > 1048576) return (b / 1048576).toFixed(1) + ' MB';
+    if (b > 1024)    return (b / 1024).toFixed(0) + ' KB';
+    return b + ' B';
+  }
+
+  /* ── Boot done ── */
+  var overlay   = document.getElementById('boot-overlay');
+  var statusDot = document.getElementById('status-dot');
+  var statusLbl = document.getElementById('status-label');
+  var topStatus = document.getElementById('topbar-status');
+  var sbStatus  = document.getElementById('sb-status');
+  var booted    = false;
+
+  function setRunning() {
+    if (booted) return;
+    booted = true;
+    clearInterval(timerInterval);
+    var elapsed = Math.floor((Date.now() - startTime) / 1000);
+    var m = Math.floor(elapsed / 60), s = elapsed % 60;
+    setTimeout(function () {
+      overlay.classList.add('hidden');
+      statusDot.classList.remove('idle');
+      statusLbl.classList.remove('idle');
+      statusLbl.textContent = 'Running';
+      topStatus.textContent = 'Running — booted in ' + m + ':' + String(s).padStart(2,'0');
+      sbStatus.textContent  = '● Running';
+    }, 600);
+  }
+
+  /* ── Init emulator ── */
   window.onload = function () {
     var emulator = new V86({
       wasm_path:        'v86.wasm',
@@ -585,30 +467,36 @@
       autostart:        true,
     });
 
-    var overlay   = document.getElementById('boot-overlay');
-    var statusDot = document.getElementById('status-dot');
-    var statusLbl = document.getElementById('status-label');
-    var topStatus = document.getElementById('topbar-status');
-    var sbStatus  = document.getElementById('sb-status');
-    var booted    = false;
+    /* Real download progress */
+    emulator.add_listener('download-progress', function (e) {
+      if (e.file_name && !e.file_name.includes('.iso')) return; // only track ISO
+      if (e.total) {
+        var pct = Math.round((e.loaded / e.total) * 100);
+        dlBar.style.width = pct + '%';
+        dlPct.textContent = pct + '%';
+        dlSize.textContent = formatBytes(e.loaded) + ' / ' + formatBytes(e.total);
+        phaseLabel.textContent = 'Downloading ISO…';
+        if (pct === 100 && !dlDone) {
+          dlDone = true;
+          dlBar.classList.add('done');
+          bootBar.classList.remove('inactive');
+          phaseLabel.textContent = 'ISO ready — booting kernel…';
+          bootPctEl.textContent = '0%';
+        }
+      } else if (e.loaded) {
+        // No total known, show bytes only
+        dlPct.textContent = '…';
+        dlSize.textContent = formatBytes(e.loaded);
+      }
+    });
 
-    function setRunning() {
-      if (booted) return;
-      booted = true;
-      progBar.style.width = '100%';
-      bootPct.textContent = '100%';
-      setTimeout(function () {
-        overlay.classList.add('hidden');
-        statusDot.classList.remove('idle');
-        statusLbl.classList.remove('idle');
-        statusLbl.textContent = 'Running';
-        topStatus.textContent = 'Running';
-        sbStatus.textContent  = '● Running';
-      }, 500);
-    }
+    /* Real serial output — actual kernel boot messages */
+    emulator.add_listener('serial0-output-char', handleSerialChar);
 
+    /* Screen mode change = display is up */
     emulator.add_listener('screen-set-mode', setRunning);
 
+    /* CPU indicator */
     setInterval(function () {
       var ips = emulator.get_instructions_per_second ? emulator.get_instructions_per_second() : 0;
       var pct = Math.min(100, Math.round((ips / 50000000) * 100));
@@ -616,19 +504,27 @@
       document.getElementById('cpu-val').textContent = pct + '%';
     }, 1000);
 
+    /* Reset */
     document.getElementById('btn-reset').addEventListener('click', function () {
       if (!confirm('Reset the virtual machine?')) return;
-      booted = false;
+      booted = false; dlDone = false;
+      startTime = Date.now();
+      bootPct = 0;
+      dlBar.style.width = '0%'; dlBar.classList.remove('done');
+      dlPct.textContent = '0%'; dlSize.textContent = '';
+      bootBar.style.width = '0%'; bootBar.classList.remove('done'); bootBar.classList.add('inactive');
+      bootPctEl.textContent = '—'; bootDetail.textContent = '';
+      serialLog.innerHTML = ''; serialBuf = '';
+      phaseLabel.textContent = 'Restarting…';
       overlay.classList.remove('hidden');
-      progBar.style.width = '0%';
-      logEl.innerHTML = '';
-      logIdx = 0;
-      statusDot.classList.add('idle');
-      statusLbl.classList.add('idle');
+      statusDot.classList.add('idle'); statusLbl.classList.add('idle');
       statusLbl.textContent = 'Booting…';
       topStatus.textContent = 'Booting';
       sbStatus.textContent  = '● Booting';
-      appendLog();
+      timerInterval = setInterval(function () {
+        var s = Math.floor((Date.now() - startTime) / 1000);
+        timerEl.textContent = Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
+      }, 1000);
       emulator.restart();
     });
 
@@ -642,10 +538,11 @@
       if (!canvas) return alert('No canvas yet.');
       var a = document.createElement('a');
       a.download = 'alpine-' + Date.now() + '.png';
-      a.href = canvas.toDataURL();
-      a.click();
+      a.href = canvas.toDataURL(); a.click();
     });
   };
+
+})();
 </script>
 </body>
 </html>
