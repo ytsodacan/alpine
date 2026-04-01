@@ -1,26 +1,651 @@
 <!doctype html>
-<html>
+
+<html lang="en">
 <head>
-    <title>Alpine in Browser</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alpine Linux · Browser Emulator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #0a0c0f;
+      --panel:      #0e1114;
+      --border:     #1e2530;
+      --accent:     #4dffb4;
+      --accent-dim: #1a5c41;
+      --amber:      #ffb347;
+      --red:        #ff4d6a;
+      --text:       #c8d8c0;
+      --text-dim:   #4a5a50;
+      --glow:       0 0 8px #4dffb480, 0 0 24px #4dffb430;
+      --font-ui:    'Rajdhani', sans-serif;
+      --font-mono:  'Share Tech Mono', monospace;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-ui);
+      overflow: hidden;
+    }
+
+    /* ── Noise grain overlay ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 9999;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      opacity: 0.4;
+    }
+
+    /* ── Layout ── */
+    .shell {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      height: 100vh;
+      padding: 16px;
+      gap: 12px;
+    }
+
+    /* ── Header ── */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-icon {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1.5px solid var(--accent);
+      border-radius: 4px;
+      box-shadow: var(--glow);
+    }
+
+    .logo-icon svg { width: 18px; height: 18px; }
+
+    .logo-text {
+      display: flex; flex-direction: column; line-height: 1;
+    }
+
+    .logo-text span:first-child {
+      font-size: 18px; font-weight: 700; letter-spacing: 0.08em;
+      color: var(--accent); text-shadow: var(--glow);
+    }
+
+    .logo-text span:last-child {
+      font-size: 11px; color: var(--text-dim); letter-spacing: 0.12em;
+      text-transform: uppercase; margin-top: 2px;
+      font-family: var(--font-mono);
+    }
+
+    .header-meta {
+      display: flex; align-items: center; gap: 24px;
+    }
+
+    .meta-item {
+      display: flex; flex-direction: column; align-items: flex-end;
+      font-size: 11px;
+    }
+
+    .meta-item .label {
+      color: var(--text-dim); text-transform: uppercase;
+      letter-spacing: 0.1em; font-size: 9px;
+    }
+
+    .meta-item .value {
+      color: var(--accent); font-family: var(--font-mono); font-size: 12px;
+    }
+
+    .sep {
+      width: 1px; height: 28px; background: var(--border);
+    }
+
+    /* ── Toolbar ── */
+    .toolbar {
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 5px 14px; border-radius: 4px; border: 1px solid var(--border);
+      background: transparent; color: var(--text-dim);
+      font-family: var(--font-ui); font-size: 12px; font-weight: 600;
+      letter-spacing: 0.06em; cursor: pointer; text-transform: uppercase;
+      transition: all 0.15s ease;
+    }
+
+    .btn:hover {
+      border-color: var(--accent); color: var(--accent);
+      box-shadow: var(--glow);
+    }
+
+    .btn-icon { width: 12px; height: 12px; }
+
+    /* ── Main terminal frame ── */
+    .terminal-wrap {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      border: 1px solid var(--border);
+      background: #000;
+      box-shadow:
+        0 0 0 1px #0a0a0a,
+        0 20px 60px rgba(0,0,0,0.8),
+        inset 0 0 80px rgba(77,255,180,0.03);
+    }
+
+    /* Title bar */
+    .term-titlebar {
+      display: flex; align-items: center;
+      padding: 8px 16px; gap: 12px;
+      background: #0d1117;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    .term-dots {
+      display: flex; gap: 6px;
+    }
+
+    .dot {
+      width: 11px; height: 11px; border-radius: 50%;
+    }
+
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #febc2e; }
+    .dot-g { background: #28c840; }
+
+    .term-title {
+      flex: 1; text-align: center; font-size: 11px;
+      color: var(--text-dim); font-family: var(--font-mono);
+      letter-spacing: 0.06em;
+    }
+
+    .term-status {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 10px; color: var(--text-dim); font-family: var(--font-mono);
+    }
+
+    .status-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 4px var(--accent); }
+      50%       { opacity: 0.4; box-shadow: none; }
+    }
+
+    /* Screen region */
+    .screen-region {
+      position: relative; flex: 1; overflow: hidden;
+      background: #000;
+    }
+
+    /* CRT scanlines */
+    .screen-region::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 10;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.18) 2px,
+        rgba(0,0,0,0.18) 4px
+      );
+    }
+
+    /* CRT vignette */
+    .screen-region::after {
+      content: '';
+      position: absolute; inset: 0; z-index: 11;
+      pointer-events: none;
+      background: radial-gradient(ellipse at center,
+        transparent 60%,
+        rgba(0,0,0,0.55) 100%
+      );
+    }
+
+    /* The actual v86 screen container */
+    #screen_container {
+      width: 100%; height: 100%;
+      position: relative; z-index: 5;
+    }
+
+    #screen_container > div {
+      width: 100%; height: 100%;
+      color: #4dffb4;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.5;
+      padding: 8px;
+      overflow: auto;
+      white-space: pre;
+      text-shadow: 0 0 6px #4dffb480;
+    }
+
+    #screen_container canvas {
+      display: block !important;
+      image-rendering: pixelated;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    /* Boot overlay */
+    #boot-overlay {
+      position: absolute; inset: 0; z-index: 20;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: #000;
+      gap: 24px;
+      transition: opacity 0.8s ease;
+    }
+
+    #boot-overlay.hidden {
+      opacity: 0; pointer-events: none;
+    }
+
+    .boot-logo {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+    }
+
+    .boot-logo .big-a {
+      font-size: 72px; font-weight: 700;
+      color: var(--accent);
+      text-shadow: 0 0 20px #4dffb4, 0 0 60px #4dffb460;
+      line-height: 1; font-family: var(--font-ui);
+      animation: flicker 4s ease-in-out infinite;
+    }
+
+    @keyframes flicker {
+      0%, 95%, 100% { opacity: 1; }
+      96% { opacity: 0.7; }
+      97% { opacity: 1; }
+      98% { opacity: 0.5; }
+      99% { opacity: 1; }
+    }
+
+    .boot-logo .alpine-name {
+      font-size: 14px; letter-spacing: 0.4em;
+      color: var(--text-dim); text-transform: uppercase;
+      font-family: var(--font-mono);
+    }
+
+    .boot-log {
+      font-family: var(--font-mono); font-size: 11px;
+      color: var(--text-dim); text-align: left;
+      width: 360px; max-height: 120px; overflow: hidden;
+      display: flex; flex-direction: column; gap: 3px;
+    }
+
+    .boot-log-line {
+      display: flex; gap: 10px;
+      animation: fadein 0.3s ease;
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    .boot-log-line .ok   { color: var(--accent); }
+    .boot-log-line .info { color: var(--amber); }
+    .boot-log-line .msg  { color: #5a7a65; }
+
+    .progress-track {
+      width: 320px; height: 2px;
+      background: var(--border); border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%; background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    .boot-hint {
+      font-size: 10px; color: var(--text-dim);
+      font-family: var(--font-mono); letter-spacing: 0.08em;
+    }
+
+    /* ── Status bar ── */
+    footer {
+      display: flex; align-items: center;
+      padding: 6px 16px; gap: 20px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: var(--font-mono); font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .stat {
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    .stat-label { color: var(--text-dim); text-transform: uppercase; font-size: 9px; letter-spacing: 0.1em; }
+    .stat-value { color: var(--accent); }
+
+    .stat-bar-wrap {
+      width: 48px; height: 3px;
+      background: var(--border); border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .stat-bar {
+      height: 100%; border-radius: 2px;
+      background: var(--accent);
+      box-shadow: 0 0 4px var(--accent);
+    }
+
+    footer .right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+
+    .badge {
+      padding: 2px 10px; border-radius: 3px; font-size: 10px;
+      font-weight: 600; letter-spacing: 0.08em; border: 1px solid;
+    }
+
+    .badge-green { border-color: var(--accent-dim); color: var(--accent); background: rgba(77,255,180,0.05); }
+    .badge-amber { border-color: #5c4010; color: var(--amber); background: rgba(255,179,71,0.05); }
+
+    /* Keyboard shortcut hints */
+    kbd {
+      display: inline-flex; align-items: center;
+      border: 1px solid var(--border); border-radius: 3px;
+      padding: 1px 5px; font-size: 10px; font-family: var(--font-mono);
+      color: var(--text-dim); background: rgba(255,255,255,0.02);
+    }
+
+    /* Fullscreen override */
+    :fullscreen .shell       { padding: 0; }
+    :fullscreen header,
+    :fullscreen footer        { display: none; }
+    :fullscreen .terminal-wrap { border-radius: 0; border: none; }
+  </style>
+
 </head>
 <body>
-    <div id="screen_container">
-        <div style="white-space: pre; font-family: monospace"></div>
-        <canvas style="display: none"></canvas>
+
+<div class="shell">
+
+  <!-- ── Header ── -->
+
+  <header>
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#4dffb4" stroke-width="2" stroke-linecap="round">
+          <polygon points="12,2 22,20 2,20"/>
+          <line x1="12" y1="9" x2="12" y2="14"/>
+          <circle cx="12" cy="17" r="0.5" fill="#4dffb4"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <span>Alpine Linux</span>
+        <span>Browser Emulator · v86</span>
+      </div>
     </div>
 
-    <script src="libv86.js"></script>
-    <script>
-        window.onload = function() {
-            var emulator = new V86Starter({
-                wasm_path: "v86.wasm",
-                memory_size: 128 * 1024 * 1024, // 128MB RAM
-                vga_bios: { url: "vgabios.bin" },
-                bios: { url: "seabios.bin" },
-                cdrom: { url: "alpine-virt-3.23.3-x86.iso" },
-                autostart: true,
-            });
-        };
-    </script>
+```
+<div class="header-meta">
+  <div class="meta-item">
+    <span class="label">Architecture</span>
+    <span class="value">x86_32</span>
+  </div>
+  <div class="sep"></div>
+  <div class="meta-item">
+    <span class="label">RAM</span>
+    <span class="value">128 MB</span>
+  </div>
+  <div class="sep"></div>
+  <div class="meta-item">
+    <span class="label">Release</span>
+    <span class="value">3.23.3</span>
+  </div>
+  <div class="sep"></div>
+
+  <div class="toolbar">
+    <button class="btn" id="btn-reset" title="Reset VM">
+      <svg class="btn-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M2 8a6 6 0 1 0 1.5-4"/>
+        <polyline points="2,4 2,8 6,8"/>
+      </svg>
+      Reset
+    </button>
+    <button class="btn" id="btn-fs" title="Fullscreen">
+      <svg class="btn-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+        <polyline points="5,2 2,2 2,5"/>
+        <polyline points="11,2 14,2 14,5"/>
+        <polyline points="5,14 2,14 2,11"/>
+        <polyline points="11,14 14,14 14,11"/>
+      </svg>
+      Fullscreen
+    </button>
+    <button class="btn" id="btn-screenshot" title="Screenshot">
+      <svg class="btn-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+        <rect x="2" y="4" width="12" height="9" rx="1"/>
+        <circle cx="8" cy="8.5" r="2.2"/>
+        <path d="M5.5 4 L6.5 2 H9.5 L10.5 4"/>
+      </svg>
+      Screenshot
+    </button>
+  </div>
+</div>
+```
+
+  </header>
+
+  <!-- ── Terminal frame ── -->
+
+  <div class="terminal-wrap">
+    <div class="term-titlebar">
+      <div class="term-dots">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+      </div>
+      <div class="term-title">alpine-virt-3.23.3 — /bin/sh — 80×24</div>
+      <div class="term-status">
+        <div class="status-dot" id="status-dot"></div>
+        <span id="status-text">BOOTING</span>
+      </div>
+    </div>
+
+```
+<div class="screen-region">
+  <!-- Boot overlay -->
+  <div id="boot-overlay">
+    <div class="boot-logo">
+      <div class="big-a">▲</div>
+      <div class="alpine-name">Alpine Linux</div>
+    </div>
+
+    <div class="boot-log" id="boot-log"></div>
+
+    <div class="progress-track">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <div class="boot-hint">Starting virtual machine — please wait…</div>
+  </div>
+
+  <!-- v86 output -->
+  <div id="screen_container">
+    <div style="white-space: pre; font-family: monospace"></div>
+    <canvas style="display: none"></canvas>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- ── Footer ── -->
+
+  <footer>
+    <div class="stat">
+      <span class="stat-label">CPU</span>
+      <div class="stat-bar-wrap"><div class="stat-bar" id="cpu-bar" style="width:0%"></div></div>
+      <span class="stat-value" id="cpu-val">—</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Memory</span>
+      <div class="stat-bar-wrap"><div class="stat-bar" id="mem-bar" style="width:64%"></div></div>
+      <span class="stat-value">128 MB</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Disk</span>
+      <span class="stat-value">CD-ROM · ISO</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Network</span>
+      <span class="stat-value" style="color:var(--text-dim)">None</span>
+    </div>
+
+```
+<div class="right">
+  <span style="font-size:10px; color:var(--text-dim)">
+    <kbd>Ctrl</kbd>+<kbd>Alt</kbd> release pointer
+  </span>
+  <div class="badge badge-amber" id="footer-badge">BOOTING</div>
+</div>
+```
+
+  </footer>
+
+</div>
+
+<script src="libv86.js"></script>
+
+<script>
+  /* ─── Boot log simulation ─── */
+  const bootMessages = [
+    { tag: 'info', msg: 'Loading kernel image…' },
+    { tag: 'ok',   msg: 'Initialising memory map' },
+    { tag: 'ok',   msg: 'Setting up virtual devices' },
+    { tag: 'info', msg: 'Mounting cdrom: alpine-virt-3.23.3-x86.iso' },
+    { tag: 'ok',   msg: 'VGA BIOS loaded' },
+    { tag: 'ok',   msg: 'SeaBIOS initialised' },
+    { tag: 'info', msg: 'Starting boot sequence…' },
+    { tag: 'ok',   msg: 'x86 CPU context ready' },
+  ];
+
+  const logEl    = document.getElementById('boot-log');
+  const progBar  = document.getElementById('progress-bar');
+  let   logIdx   = 0;
+
+  function appendLog() {
+    if (logIdx >= bootMessages.length) return;
+    const { tag, msg } = bootMessages[logIdx++];
+    const line = document.createElement('div');
+    line.className = 'boot-log-line';
+    line.innerHTML = `<span class="${tag}">[${tag.toUpperCase().padEnd(4,' ')}]</span><span class="msg">${msg}</span>`;
+    logEl.appendChild(line);
+    progBar.style.width = Math.round((logIdx / bootMessages.length) * 85) + '%';
+    if (logIdx < bootMessages.length) setTimeout(appendLog, 600 + Math.random() * 400);
+  }
+
+  setTimeout(appendLog, 400);
+
+  /* ─── Emulator ─── */
+  window.onload = function () {
+    var emulator = new V86Starter({
+      wasm_path:   'v86.wasm',
+      memory_size: 128 * 1024 * 1024,
+      vga_bios:    { url: 'vgabios.bin' },
+      bios:        { url: 'seabios.bin' },
+      cdrom:       { url: 'alpine-virt-3.23.3-x86.iso' },
+      screen_container: document.getElementById('screen_container'),
+      autostart: true,
+    });
+
+    /* Hide overlay once the VM emits its first screen output */
+    var overlay   = document.getElementById('boot-overlay');
+    var statusDot = document.getElementById('status-dot');
+    var statusTxt = document.getElementById('status-text');
+    var badge     = document.getElementById('footer-badge');
+    var booted    = false;
+
+    emulator.add_listener('screen-set-mode', function() {
+      if (!booted) {
+        booted = true;
+        progBar.style.width = '100%';
+        setTimeout(function () {
+          overlay.classList.add('hidden');
+          statusTxt.textContent = 'RUNNING';
+          statusDot.style.animationDuration = '1.2s';
+          badge.textContent = 'RUNNING';
+          badge.classList.replace('badge-amber', 'badge-green');
+        }, 600);
+      }
+    });
+
+    /* CPU usage indicator (rough approximation) */
+    var lastIps = 0;
+    setInterval(function () {
+      var ips = emulator.get_instructions_per_second ? emulator.get_instructions_per_second() : 0;
+      var pct = Math.min(100, Math.round((ips / 50000000) * 100));
+      document.getElementById('cpu-bar').style.width = pct + '%';
+      document.getElementById('cpu-val').textContent  = pct + '%';
+    }, 1000);
+
+    /* Reset button */
+    document.getElementById('btn-reset').addEventListener('click', function () {
+      if (confirm('Reset the virtual machine?')) {
+        booted = false;
+        overlay.classList.remove('hidden');
+        progBar.style.width = '0%';
+        logEl.innerHTML = '';
+        logIdx = 0;
+        statusTxt.textContent = 'BOOTING';
+        badge.textContent = 'BOOTING';
+        badge.classList.replace('badge-green', 'badge-amber');
+        appendLog();
+        emulator.restart();
+      }
+    });
+
+    /* Fullscreen */
+    document.getElementById('btn-fs').addEventListener('click', function () {
+      var el = document.querySelector('.shell');
+      if (!document.fullscreenElement) el.requestFullscreen();
+      else document.exitFullscreen();
+    });
+
+    /* Screenshot */
+    document.getElementById('btn-screenshot').addEventListener('click', function () {
+      var canvas = document.querySelector('#screen_container canvas');
+      if (!canvas) return alert('No canvas available yet.');
+      var a = document.createElement('a');
+      a.download = 'alpine-screenshot-' + Date.now() + '.png';
+      a.href = canvas.toDataURL();
+      a.click();
+    });
+  };
+</script>
+
 </body>
 </html>
